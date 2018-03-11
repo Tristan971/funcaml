@@ -28,7 +28,3 @@ let code_cesar (str: string) (d: int) : string = map(fun (c: char) -> shift_char
 let code_cesari_enc (str: string) : string = mapi(fun (i: int) (c: char) -> shift_char c i) str
 
 let code_cesari_dec (str: string) : string = mapi(fun (i:int) (c: char) -> shift_char c (-i)) str
-
-let main : unit = 
-  let dec = "Test" in
-  print_string(code_cesari_enc dec ^ "=" ^ code_cesari_dec(code_cesari_enc dec))
