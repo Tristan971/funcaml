@@ -77,9 +77,17 @@ let test_parse_list: bool =
 let reorder_data (tide_data: tide_data) : string = 
   let sorted_hours : string = 
     if (String.compare tide_data.bmam tide_data.hmam) < 0 then
-      Format.asprintf "%s(BM) %s(HM) %s(BM) %s(HM)" tide_data.bmam tide_data.hmam tide_data.bmpm tide_data.hmpm
+      Format.asprintf "%s(BM) %s(HM) %s(BM) %s(HM)" 
+        tide_data.bmam 
+        tide_data.hmam 
+        tide_data.bmpm 
+        tide_data.hmpm
     else
-      Format.asprintf "%s(BM) %s(HM) %s(BM) %s(HM)" tide_data.hmam tide_data.bmam tide_data.hmpm tide_data.bmpm
+      Format.asprintf "%s(HM) %s(BM) %s(HM) %s(BM)" 
+        tide_data.hmam 
+        tide_data.bmam 
+        tide_data.hmpm 
+        tide_data.bmpm
     in
   Format.asprintf "%s %s" tide_data.date sorted_hours
 
@@ -88,6 +96,16 @@ let test_reorder_data : bool =
   let expected : string = "15/02 0:09(HM) 6:51(BM) 12:37(HM) 19:20(BM)" in
   let actual : string = reorder_data { date="15/02"; hmam="0:09"; hmpm="12:37"; bmam="6:51"; bmpm="19:20" } in
   expect_string_value expected actual
+
+(* Q1.5 *)
+let reorder_datas (tide_datas: tide_data list) : string list =
+  List.map reorder_data tide_datas
+
+(* T1.5 *)
+let test_reorder_datas : bool =
+  let expected : string list = [ "15/02 0:09(HM) 6:51(BM) 12:37(HM) 19:20(BM)" ] in
+  let actual : string list = reorder_datas [ { date="15/02"; hmam="0:09"; hmpm="12:37"; bmam="6:51"; bmpm="19:20" } ] in
+  expected = actual
 
 (* EXECTESTS *)
 let exec_test (name: string) (test_fn: bool) : unit =
@@ -104,3 +122,4 @@ let main: unit =
   exec_test "PARSE_SINGLE_TIDE_DATA" test_parse;
   exec_test "PARSE_MULTIPLE_TIDE_DATA_LINES" test_parse_list;
   exec_test "REORDER_DATA" test_reorder_data;
+  exec_test "REORDER_DATAS" test_reorder_datas;
