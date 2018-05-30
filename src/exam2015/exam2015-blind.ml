@@ -91,8 +91,11 @@ let test_reorder_data : bool =
 
 (* EXECTESTS *)
 let exec_test (name: string) (test_fn: bool) : unit =
-  Printf.printf "%s -> %s" name (if test_fn then "OK" else "NOK"); 
-  print_char '\n' 
+  let _ = Printf.printf "%s -> " name in
+  if test_fn then
+    output_string stdout (Format.asprintf "%s" "OK\n")
+  else
+    output_string stderr (Format.asprintf "<!!!> NOK <!!!>\n")
 
 let main: unit = 
   print_string "====================== TESTS ======================\n";
