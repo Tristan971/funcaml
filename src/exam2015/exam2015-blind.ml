@@ -137,6 +137,24 @@ let test_readfile : bool =
   let actual : string list = readfile "src/exam2015/test_read" in
   expect_strlist_value expected actual
 
+(* Q1.8 *)
+let writefile (file: string) (lines: string list) : unit =
+  let w_channel : out_channel = open_out file in
+  let write_line (line : string) : unit = Printf.fprintf w_channel "%s\n" line in
+  let rec write_lines (lines_left : string list) : unit =
+    match lines_left with
+      | h::t -> write_line h; write_lines t
+      | [] -> close_out w_channel
+  in
+  write_lines lines
+
+(* T1.8 *)
+let test_writefile : bool = 
+  try
+    let _ = writefile "src/exam2015/test_write" [ "write1"; "write2" ] in
+    true
+  with e -> false
+
 (* EXECTESTS *)
 let exec_test (name: string) (test_fn: bool) : unit =
   let _ = Printf.printf "%s -> " name in
@@ -154,3 +172,4 @@ let main: unit =
   exec_test "REORDER_DATA" test_reorder_data;
   exec_test "REORDER_DATAS" test_reorder_datas;
   exec_test "READ_FILE" test_readfile;
+  exec_test "WRITE_FILE" test_writefile;
