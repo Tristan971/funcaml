@@ -155,6 +155,19 @@ let test_writefile : bool =
     true
   with e -> false
 
+(* Q1.9 *)
+let reorder_file (file_in : string) (file_out : string) : unit =
+  let read_lines : (string list) = readfile file_in in
+  let reordered_lines : (string list) = reorder_lines read_lines in
+  writefile file_out reordered_lines
+
+(* T1.9 *)
+let test_reorder_file : bool =
+  try
+    let _ = reorder_file "src/exam2015/reorder_in" "src/exam2015/reorder_out" in
+    true
+  with e -> false
+
 (* EXECTESTS *)
 let exec_test (name: string) (test_fn: bool) : unit =
   let _ = Printf.printf "%s -> " name in
@@ -173,3 +186,5 @@ let main: unit =
   exec_test "REORDER_DATAS" test_reorder_datas;
   exec_test "READ_FILE" test_readfile;
   exec_test "WRITE_FILE" test_writefile;
+  exec_test "REORDER_FILE" test_reorder_file;
+  
