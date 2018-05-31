@@ -24,6 +24,11 @@ let expect_string_value (expected: string) (actual: string) : bool =
     let _ = Printf.printf "Actual != Expected! (CMP_RES = %i)\n\t-> Expected : %s\n\t-> Actual : %s\n" cmpRes expected actual in
     false
 
+let expect_strlist_value (expected : string list) (actual : string list) = 
+  let expected_str : string = Format.asprintf "[%s]" (String.concat "; " expected) in
+  let actual_str : string = Format.asprintf "[%s]" (String.concat "; " expected) in
+  expect_string_value expected_str actual_str
+
 (* END_UTILS *)
 
 (* Q1.1 *)
@@ -107,6 +112,31 @@ let test_reorder_datas : bool =
   let actual : string list = reorder_datas [ { date="15/02"; hmam="0:09"; hmpm="12:37"; bmam="6:51"; bmpm="19:20" } ] in
   expected = actual
 
+(* Q1.6 *)
+let reorder_lines (lines_unordered : string list) : string list =
+  let split_lines_ : (string list) list = split_lines lines_unordered in
+  let tide_list : tide_data list = to_tide_datas split_lines_ in
+  reorder_datas tide_list
+
+(* Q1.7 *)
+let readfile (file: string) : (string list) =
+  let r_channel : in_channel = open_in file in
+  let rec read_lines (channel : in_channel) (lines_read : string list) : string list = 
+    try
+      let line : string = input_line r_channel in
+      read_lines channel lines_read@[line]
+    with e ->
+      lines_read
+  in
+  let _ = close_in r_channel in
+  read_lines r_channel []
+
+(* Q1.7 *)
+let test_readfile : bool =
+  let expected : string list = [ "read1" ; "read2" ] in
+  let actual : string list = readfile "src/exam2015/test_read" in
+  expect_strlist_value expected actual
+
 (* EXECTESTS *)
 let exec_test (name: string) (test_fn: bool) : unit =
   let _ = Printf.printf "%s -> " name in
@@ -123,3 +153,4 @@ let main: unit =
   exec_test "PARSE_MULTIPLE_TIDE_DATA_LINES" test_parse_list;
   exec_test "REORDER_DATA" test_reorder_data;
   exec_test "REORDER_DATAS" test_reorder_datas;
+  exec_test "READ_FILE" test_readfile;
